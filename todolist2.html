@@ -1,0 +1,104 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+   <style>
+    body {
+    background-color: darkcyan;
+    text-align: center;
+
+}
+
+input {
+    border: 1px solid black;
+    font-size: 20px;
+    background-color: white;
+    color: black;
+    margin-left: 140px;
+}
+
+button {
+    border: none;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    justify-content: center;
+    font-size: large;
+    border-radius: 11px;
+    margin: 10px;
+
+    flex-direction: row;
+
+}
+
+.p1 {
+    display: none;
+}
+
+
+
+
+button:hover {
+    background-color: rgb(27, 83, 118);
+
+}
+   </style>
+</head>
+<body>
+
+    <h1>To-Do List</h1>
+    <input type="text" id="text" placeholder="Enter your task...">
+    <button onclick="addTask()">Add to List</button>
+
+    <div id="taskList"></div>
+
+    <script>
+        let tasks = JSON.parse(localStorage.getItem("task")) || [];
+
+        function addTask() {
+            let input = document.getElementById("text");
+            if (input.value.trim() === "") return;
+
+            tasks.push(input.value);
+            localStorage.setItem("task", JSON.stringify(tasks));
+            input.value = "";
+            showTask();
+        }
+
+        function showTask() {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = "";
+
+            tasks.forEach((data, index) => {
+                taskList.innerHTML += `
+                    <div>
+                        <p>${index + 1}. ${data}</p>
+                        <button onclick="editTask(${index})">Edit</button>
+                        <button onclick="deleteTask(${index})">Delete</button>
+                    </div>
+                `;
+            });
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            localStorage.setItem("task", JSON.stringify(tasks));
+            showTask();
+        }
+
+        function editTask(index) {
+            let newTask = prompt("Edit your task:", tasks[index]);
+            if (newTask !== null && newTask.trim() !== "") {
+                tasks[index] = newTask;
+                localStorage.setItem("task", JSON.stringify(tasks));
+                showTask();
+            }
+        }
+
+        showTask();
+    </script>
+
+</body>
+</html>
